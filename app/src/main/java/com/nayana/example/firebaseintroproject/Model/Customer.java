@@ -1,4 +1,4 @@
-package com.nayana.example.firebaseintroproject;
+package com.nayana.example.firebaseintroproject.Model;
 
 public class Customer {
     private String firstName;

@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     //To access a location in the database and read or write data, use getReference()
     private FirebaseDatabase database;
     private DatabaseReference databaseReference;
+
     private FirebaseAuth mAuth;
     //The entry point of the FireBase Authentication SDK.
     //First, obtain an instance of this class by calling getInstance().
@@ -131,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
 
                                             databaseReference = database.getReference("usingCustomerObject");
                                             //Customer customer = new Customer("raju","rajanna","raju@raju.com",59);
-                                            //ustomer customer = new Customer();
+                                            //Customer customer = new Customer();
                                             //Customer customer = new Customer("nayana","nayana","nayana@nayana.com",25);
                                             Customer customer = new Customer("nayana", pwd , emailString ,25);
                                             databaseReference.setValue(customer);
