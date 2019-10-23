@@ -1,8 +1,9 @@
-package com.nayana.example.firebaseintroproject;
+package com.nayana.example.firebaseintroproject.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -15,11 +16,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.nayana.example.firebaseintroproject.Model.Customer;
+import com.nayana.example.firebaseintroproject.R;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -136,6 +136,8 @@ public class MainActivity extends AppCompatActivity {
                                             //Customer customer = new Customer("nayana","nayana","nayana@nayana.com",25);
                                             Customer customer = new Customer("nayana", pwd , emailString ,25);
                                             databaseReference.setValue(customer);
+
+                                            startActivity( new Intent( MainActivity.this , Main2Activity.class));
                                         }
                                 }
                             });
@@ -174,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
                                         else
                                             {
                                                 Toast.makeText( MainActivity.this , "Account Created Successfully" , Toast.LENGTH_LONG).show();
-
+                                                startActivity( new Intent( MainActivity.this , Main2Activity.class));
                                             }
                                 }
                             });
