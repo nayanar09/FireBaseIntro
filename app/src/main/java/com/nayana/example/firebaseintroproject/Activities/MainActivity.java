@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText email;
     private EditText password;
     private Button login;
-    private Button signout;
+    //private Button signout;
     private Button createAccount;
 
     /*  {Visit https://firebase.google.com/docs/database/security to learn more about security rules.
@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         email = (EditText) findViewById(R.id.emailID);
         password = (EditText) findViewById(R.id.passwordID);
         login = (Button) findViewById(R.id.loginID);
-        signout = (Button) findViewById(R.id.signoutID);
+        //signout = (Button) findViewById(R.id.signoutID);
         createAccount = (Button) findViewById(R.id.createAccountID);
 
         mAuth = FirebaseAuth.getInstance();
@@ -137,7 +137,8 @@ public class MainActivity extends AppCompatActivity {
                                             Customer customer = new Customer("nayana", pwd , emailString ,25);
                                             databaseReference.setValue(customer);
 
-                                            startActivity( new Intent( MainActivity.this , Main2Activity.class));
+                                            startActivity( new Intent( MainActivity.this , ImageActivity.class));
+                                            finish();
                                         }
                                 }
                             });
@@ -149,13 +150,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        signout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mAuth.signOut();
-                Toast.makeText(MainActivity.this, "You Signed Out", Toast.LENGTH_LONG).show();
-            }
-        });
+//        signout.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                mAuth.signOut();
+//                Toast.makeText(MainActivity.this, "You Signed Out", Toast.LENGTH_LONG).show();
+//            }
+//        });
 
         createAccount.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -176,7 +177,8 @@ public class MainActivity extends AppCompatActivity {
                                         else
                                             {
                                                 Toast.makeText( MainActivity.this , "Account Created Successfully" , Toast.LENGTH_LONG).show();
-                                                startActivity( new Intent( MainActivity.this , Main2Activity.class));
+                                                startActivity( new Intent( MainActivity.this , ImageActivity.class));
+                                                finish();
                                             }
                                 }
                             });

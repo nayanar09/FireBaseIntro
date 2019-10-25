@@ -4,10 +4,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
@@ -19,6 +24,8 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -33,7 +40,7 @@ import java.io.File;
 
 public class Main2Activity extends AppCompatActivity implements View.OnClickListener {
 
-    private Button chooseImage , saveImage , displayImage;
+    private Button saveImage , displayImage;
     private EditText imageNameEditText;
     private ImageButton imageView;
     private ProgressBar progressBar;
@@ -44,13 +51,13 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
     DatabaseReference databaseReference;
     StorageReference storageReference;
     StorageTask uploadTask;
+    private ProgressDialog mProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 
-        chooseImage = findViewById(R.id.chooseButton);
         saveImage = findViewById(R.id.saveButton);
         displayImage = findViewById(R.id.dispalyButton);
         imageNameEditText = findViewById(R.id.editText);
@@ -60,7 +67,9 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
         databaseReference = FirebaseDatabase.getInstance().getReference("Upload");
         storageReference = FirebaseStorage.getInstance().getReference().child("Upload");
 
-        chooseImage.setOnClickListener(this);
+        mProgress = new ProgressDialog(this);
+
+        imageView.setOnClickListener(this);
         saveImage.setOnClickListener(this);
         displayImage.setOnClickListener(this);
     }
@@ -70,7 +79,7 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
 
         switch ( v.getId() ){
 
-            case R.id.chooseButton : openFileChooser();
+            case R.id.imageButton : openFileChooser();
                 break;
 
             case  R.id.saveButton :
@@ -87,6 +96,7 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
 
                 Intent intent = new Intent( Main2Activity.this , ImageActivity.class);
                 startActivity(intent);
+                finish();
                 break;
         }
     }
@@ -101,16 +111,20 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
     private void saveData() {
         final String imageName = imageNameEditText.getText().toString().trim();
 
-        if ( imageName.isEmpty() ){
+        if ( imageView != null && imageName.isEmpty()){
             imageNameEditText.setError( "Please Enter image name");
             imageNameEditText.requestFocus();
             return;
         }
 
+        mProgress.setMessage("uploading in progress");
+        mProgress.show();
+
         StorageReference reference = storageReference.child( System.currentTimeMillis() + "."+ getFileExtension(imageUri));
 
         reference.putFile(imageUri)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @SuppressLint("LongLogTag")
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         // Get a URL to the uploaded content
@@ -122,6 +136,7 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
                         while ( !uriTask.isSuccessful());
 
                         Uri downloadUri = uriTask.getResult();
+                        Log.d( "FireBaseIntroActivity : url " , downloadUri.toString());
 
                         Upload upload = new Upload( imageName , downloadUri.toString());
 
@@ -130,6 +145,9 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
                         String uploadID = databaseReference.push().getKey();
 
                         databaseReference.child(uploadID).setValue(upload);
+                        mProgress.dismiss();
+
+                        startActivity( new Intent( Main2Activity.this , ImageActivity.class));
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

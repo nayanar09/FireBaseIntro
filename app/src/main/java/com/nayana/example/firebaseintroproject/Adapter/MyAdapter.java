@@ -90,7 +90,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
             menu.setHeaderTitle("choose an action");
             MenuItem doAnyTask = menu.add(Menu.NONE , 1 , 1 , "do any task");
-            MenuItem delete = menu.add(Menu.NONE , 1 , 1 , "delete");
+            MenuItem delete = menu.add(Menu.NONE , 2 , 2 , "delete");
 
             doAnyTask.setOnMenuItemClickListener(this);
             delete.setOnMenuItemClickListener(this);
@@ -104,6 +104,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
                 if ( position != RecyclerView.NO_POSITION){
                     switch (item.getItemId()){
+
                         case 1 : listener.onDoAnyTask(position);
                                     return true;
                         case 2 : listener.onDelete(position);
